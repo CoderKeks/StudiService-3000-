@@ -5,10 +5,11 @@ class Database:
     _instance = None
     _lock = Lock()
 
-    def __new__(cls, db_path=":memory:"):
+    def __new__(cls, db_path):
         with cls._lock:
             if cls._instance is None:
                 cls._instance = super(Database, cls).__new__(cls)
+                print(db_path)
                 cls._instance._init(db_path)
         return cls._instance
 
@@ -26,6 +27,7 @@ class Database:
         return self.cursor.fetchall()
 
     def update(self, query, params=None):
+        print(query)
         self.cursor.execute(query, params or ())
         self.connection.commit()
         return self.cursor.rowcount
