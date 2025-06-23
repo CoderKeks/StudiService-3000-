@@ -11,6 +11,29 @@ class Database:
                 cls._instance = super(Database, cls).__new__(cls)
                 print(db_path)
                 cls._instance._init(db_path)
+                cls._instance.create(f"""
+                       CREATE TABLE IF NOT EXISTS kurs
+                       (
+                        id INTEGER NOT NULL PRIMARY KEY,
+                        kursname TEXT NOT NULL,
+                        dozent TEXT NOT NULL,
+                        semester INTEGER NOT NULL
+                       );""")
+                cls._instance.create(f"""
+                       CREATE TABLE IF NOT EXISTS studierende
+                       (
+                        id INTEGER NOT NULL PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        matrikelnummer INTEGER NOT NULL,
+                        studiengang TEXT NOT NULL
+                       );""")
+                cls._instance.create(f"""
+                       CREATE TABLE IF NOT EXISTS teilnahme
+                       (
+                        id INTEGER NOT NULL PRIMARY KEY,
+                        kursId INTEGER NOT NULL
+                        studierendeId INTEGER NOT NULL
+                       );""")
         return cls._instance
 
     def _init(self, db_path, check_same_thread=False):
