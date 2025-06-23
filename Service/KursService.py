@@ -28,8 +28,10 @@ class KursService:
     def delete(self, kursID: int):
         return self.db.delete("DELETE FROM kurs WHERE kurs.id = ?", str(kursID)) > 1 and self.db.delete("DELETE FROM teilnahme WHERE teilname.kursId = ?", str(kursID)) > 1
 
-    def getOne(self, kursID: int):
-        return self.db.read("SELECT * FROM kurs WHERE kurs.id = ? LIMIT 1", str(kursID))
+    def get_one(self, kursID: int):
+        row = self.db.read("SELECT * FROM kurs WHERE kurs.id = ? LIMIT 1", str(kursID))
+        return Kurs(*row[0])
     
-    def getAll(self):
-        return self.db.read("SELECT * FROM kurs")
+    def get_all(self):
+        rows = self.db.read("SELECT * FROM kurs")
+        return [Kurs(*row) for row in rows]
