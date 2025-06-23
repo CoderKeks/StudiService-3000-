@@ -1,8 +1,18 @@
 class Studierender:
-    def __init__(self, name, matrikelnummer, studiengang):
+    def __init__(self, id, name, matrikelnummer, studiengang):
+        self.id = id
         self.name = name
         self.matrikelnummer = matrikelnummer
         self.studiengang = studiengang
+
+    # ID
+    @property
+    def id(self):
+        return self.__id
+    
+    @id.setter
+    def id(self, value):
+        self.__id = value
 
     # Name
     @property
@@ -30,3 +40,6 @@ class Studierender:
     @studiengang.setter
     def studiengang(self, value):
         self.__studiengang = value
+
+    def __str__(self):
+        return f"ID: {self.id}, Name: {self.name}, Matrikelnummer: {self.matrikelnummer}, Studiengang: {self.studiengang}"

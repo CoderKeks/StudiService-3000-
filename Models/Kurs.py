@@ -1,10 +1,19 @@
 import Database
 class Kurs:
-    def __init__(self, kursname, dozent, semester):
+    def __init__(self, id, kursname, dozent, semester):
+        self.id = id
         self.kursname = kursname
         self.dozent = dozent
         self.semester = semester
-        
+
+    # ID
+    @property
+    def id(self):
+        return self.__id
+    
+    @id.setter
+    def id(self, value):
+        self.__id = value
 
     # kursname
     @property
@@ -32,3 +41,6 @@ class Kurs:
     @semester.setter
     def semester(self, value):
         self.__semester = value
+
+    def __str__(self):
+        return f"ID: {self.id}, Kursname: {self.kursname}, Dozent: {self.dozent}, Semester: {self.semester}"
