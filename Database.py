@@ -14,7 +14,7 @@ class Database:
                 cls._instance.create(f"""
                        CREATE TABLE IF NOT EXISTS kurs
                        (
-                        id INTEGER NOT NULL PRIMARY KEY,
+                        id INTEGER PRIMARY KEY,
                         kursname TEXT NOT NULL,
                         dozent TEXT NOT NULL,
                         semester INTEGER NOT NULL
@@ -22,7 +22,7 @@ class Database:
                 cls._instance.create(f"""
                        CREATE TABLE IF NOT EXISTS studierende
                        (
-                        id INTEGER NOT NULL PRIMARY KEY,
+                        id INTEGER PRIMARY KEY,
                         name TEXT NOT NULL,
                         matrikelnummer INTEGER NOT NULL,
                         studiengang TEXT NOT NULL
@@ -30,8 +30,8 @@ class Database:
                 cls._instance.create(f"""
                        CREATE TABLE IF NOT EXISTS teilnahme
                        (
-                        id INTEGER NOT NULL PRIMARY KEY,
-                        kursId INTEGER NOT NULL
+                        id INTEGER PRIMARY KEY,
+                        kursId INTEGER NOT NULL,
                         studierendeId INTEGER NOT NULL
                        );""")
         return cls._instance
