@@ -1,8 +1,8 @@
-import Kurs, Database, pathlib
+import Database, pathlib
+from Service.KursService import KursService
+from Models.Kurs import Kurs
 
 if __name__ == "__main__":
-    kurs1 = Kurs.Kurs("Deutsch", "Herr Ruhl", 1)
-    db = Database.Database(pathlib.Path("test.db"))
-    cur  = db.connection.cursor()
+    kurs_service = KursService()
 
-    print(db.read("SELECT * FROM kurs"))
+    print(kurs_service.getAll())
