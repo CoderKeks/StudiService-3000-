@@ -27,8 +27,11 @@ class StudierendeService:
     def delete(self, studierendeId: int):
         return self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", int(studierendeId)) > 1 and self.db.delete(f"DELETE FROM teilnahme WHERE teilname.studierendeId = ?", int(studierendeId)) > 1
 
-    def getOne(self, studierendeId: int):
+    def get_one(self, studierendeId: int):
         return self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ? LIMIT 1", int(studierendeId))
     
-    def getAll(self):
+    def get_all(self):
         return self.db.read("SELECT * FROM studierende")
+    
+    def add_to_kurs(self, studierendeId, kursId):
+        return self.db.create("INSERT INTO teilname (studierendeId, kursId) VALUES ?, ?", int(studierendeId), int(kursId))

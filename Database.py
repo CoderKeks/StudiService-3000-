@@ -11,6 +11,7 @@ class Database:
                 cls._instance = super(Database, cls).__new__(cls)
                 print(db_path)
                 cls._instance._init(db_path)
+                cls._instance.create('PRAGMA foreign_keys = ON')
                 cls._instance.create(f"""
                        CREATE TABLE IF NOT EXISTS kurs
                        (
@@ -32,7 +33,9 @@ class Database:
                        (
                         id INTEGER PRIMARY KEY,
                         kursId INTEGER NOT NULL,
-                        studierendeId INTEGER NOT NULL
+                        studierendeId INTEGER NOT NULL, 
+                        FOREIGN KEY (kursId) REFERENCES kurs(id),
+                        FOREIGN KEY (studierendeId) REFERENCES studierende(id)
                        );""")
         return cls._instance
 
