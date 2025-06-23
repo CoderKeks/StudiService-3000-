@@ -1,3 +1,2 @@
 # StudiService-3000-
-Hallo test123
-Studenten Service 
+Service um Studierende und Kurse zu verwalten
