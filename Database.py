@@ -9,8 +9,33 @@ class Database:
         with cls._lock:
             if cls._instance is None:
                 cls._instance = super(Database, cls).__new__(cls)
-                print(db_path)
                 cls._instance._init(db_path)
+                cls._instance.create('PRAGMA foreign_keys = ON')
+                cls._instance.create(f"""
+                       CREATE TABLE IF NOT EXISTS kurs
+                       (
+                        kursname TEXT NOT NULL,
+                        dozent TEXT NOT NULL,
+                        semester INTEGER NOT NULL,
+                        id INTEGER PRIMARY KEY
+                       );""")
+                cls._instance.create(f"""
+                       CREATE TABLE IF NOT EXISTS studierende
+                       (
+                        name TEXT NOT NULL,
+                        matrikelnummer INTEGER NOT NULL,
+                        studiengang TEXT NOT NULL,
+                        id INTEGER PRIMARY KEY
+                       );""")
+                cls._instance.create(f"""
+                       CREATE TABLE IF NOT EXISTS teilnahme
+                       (
+                        kursId INTEGER NOT NULL,
+                        studierendeId INTEGER NOT NULL, 
+                        id INTEGER PRIMARY KEY,
+                        FOREIGN KEY (kursId) REFERENCES kurs(id),
+                        FOREIGN KEY (studierendeId) REFERENCES studierende(id)
+                       );""")
         return cls._instance
 
     def _init(self, db_path, check_same_thread=False):
@@ -27,7 +52,6 @@ class Database:
         return self.cursor.fetchall()
 
     def update(self, query, params=None):
-        print(query)
         self.cursor.execute(query, params or ())
         self.connection.commit()
         return self.cursor.rowcount

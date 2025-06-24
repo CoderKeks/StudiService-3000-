@@ -1,8 +1,12 @@
-import Kurs, Database, pathlib
+import Models
+from GraphicalUserInterface import GraphicalUserInterface
+import Models.Kurs
+import Service
+import Service.KursService
+
+# todo: implement .env for config values like window size and database file name
 
 if __name__ == "__main__":
-    kurs1 = Kurs.Kurs("Deutsch", "Herr Ruhl", 1)
-    db = Database.Database(pathlib.Path("test.db"))
-    cur  = db.connection.cursor()
-
-    print(db.read("SELECT * FROM kurs"))
+    Service.KursService.KursService().create(Models.Kurs.Kurs('Deutsch', 'Ruhl', 1))    
+    ui = GraphicalUserInterface()
+    
