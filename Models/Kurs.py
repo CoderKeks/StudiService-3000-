@@ -1,6 +1,6 @@
 import Database
 class Kurs:
-    def __init__(self, id, kursname, dozent, semester):
+    def __init__(self, kursname, dozent, semester, id=None):
         self.id = id
         self.kursname = kursname
         self.dozent = dozent

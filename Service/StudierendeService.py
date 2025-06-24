@@ -29,11 +29,12 @@ class StudierendeService:
 
     def get_one(self, studierendeId: int):
         row = self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ? LIMIT 1", int(studierendeId))
-        return Studierender(*row[0])
+        row = row[0]
+        return Studierender(*row)
     
     def get_all(self):
         rows = self.db.read("SELECT * FROM studierende")
-        [Studierender(*row) for row in rows]
+        return [Studierender(*row) for row in rows]
     
     def add_to_kurs(self, studierendeId, kursId):
         return self.db.create("INSERT INTO teilname (studierendeId, kursId) VALUES ?, ?", int(studierendeId), int(kursId))

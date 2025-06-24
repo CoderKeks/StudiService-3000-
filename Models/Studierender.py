@@ -1,5 +1,5 @@
 class Studierender:
-    def __init__(self, id, name, matrikelnummer, studiengang):
+    def __init__(self, name, matrikelnummer, studiengang, id=None):
         self.id = id
         self.name = name
         self.matrikelnummer = matrikelnummer
