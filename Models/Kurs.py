@@ -1,10 +1,11 @@
-import Database
+from Models.Person import Dozent
+
 class Kurs:
-    def __init__(self, kursname, dozent, semester, id=None):
-        self.id = id
-        self.kursname = kursname
-        self.dozent = dozent
-        self.semester = semester
+    def __init__(self, kursname: str, dozent: Dozent, semester: int, id=None):
+        self.__id = id
+        self.__kursname = kursname
+        self.__dozent = dozent
+        self.__semester = semester
 
     # ID
     @property
@@ -43,4 +44,4 @@ class Kurs:
         self.__semester = value
 
     def __str__(self):
-        return f"ID: {self.id}, Kursname: {self.kursname}, Dozent: {self.dozent}, Semester: {self.semester}"
+        return f"ID: {self.__id}, Kursname: {self.__kursname}, Dozent: {self.__dozent.name}, Semester: {self.__semester}"

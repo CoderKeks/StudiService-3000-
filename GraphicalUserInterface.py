@@ -1,9 +1,8 @@
 import tkinter
-import Models.Kurs
-import Models.Studierender
-from Service.KursService import KursService
-from Service.StudierendeService import StudierendeService
-import Models
+from Models.Kurs import Kurs
+from Models.Person import Student
+from Repositories.KursRepository import KursService
+from Repositories.StudentRepository import StudierendeService
 
 #config
 project_name = "Studi-Service-3000"
@@ -66,7 +65,7 @@ class GraphicalUserInterface:
         studiengang = self.add_field_with_label("Studiengang")
 
         def handle_create_student():
-            self.studierender_service.create(Models.Studierender.Studierender(name.get(), matrikelnummer.get(), studiengang.get()))
+            self.studierender_service.create(Student(name.get(), matrikelnummer.get(), studiengang.get()))
             self.show_studenten_list()
 
         submit_btn = tkinter.Button(self.root, text="Student anlegen",command=handle_create_student)
@@ -101,7 +100,7 @@ class GraphicalUserInterface:
         semester = self.add_field_with_label("Semester")
 
         def handle_create_class():
-            self.kurs_service.create(Models.Kurs.Kurs(kursname.get(), dozent.get(), int(semester.get())))
+            self.kurs_service.create(Kurs(kursname.get(), dozent.get(), int(semester.get())))
             self.show_class_list()
 
         submit_btn = tkinter.Button(self.root, text="Kurs anlegen",command=handle_create_class)
