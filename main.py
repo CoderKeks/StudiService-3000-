@@ -1,6 +1,8 @@
 import tkinter as tk
 from GUI.MainMenuFrame import MainMenuFrame 
 from GUI.StudentListFrame import StudentListFrame
+from Service.KursService import KursService
+from Service.StudierendeService import StudierendeService
 """ import Models
 from GraphicalUserInterface import GraphicalUserInterface
 import Models.Kurs
@@ -9,20 +11,27 @@ import Service.KursService """
 
 # todo: implement .env for config values like window size and database file name
 
+#config
+PROJECT_NAME = "Studi-Service-3000"
+WIDTH = 1000
+HEIGHT = 500
+
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Studi-Service-3000")
-        self.geometry("800x600")
+        
+        self.kurs_service = KursService()
+        self.studierender_service = StudierendeService()
+        
+        self.title(PROJECT_NAME)
+        self.geometry(f"{WIDTH}x{HEIGHT}")
         self.show_main_menu()
 
     def show_main_menu(self):
         self._show_frame(MainMenuFrame(self, self.show_students, self.show_courses))
 
     def show_students(self):
-        # Replace with real data/service call
-        students = ["Max", "Anna"]
-        self._show_frame(StudentListFrame(self, students, self.show_main_menu))
+        self._show_frame(StudentListFrame(self, self.show_main_menu))
 
     def show_courses(self):
         # Placeholder for course list frame, implement analog to show_students

@@ -25,11 +25,12 @@ class StudierendeService:
                         WHERE studierende.id = ?;""", (studierender.name, studierender.matrikelnummer, studierender.studiengang, int(studierendeId)))
         
     def delete(self, studierendeId: int):
-        return self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", int(studierendeId)) > 1 and self.db.delete(f"DELETE FROM teilnahme WHERE teilname.studierendeId = ?", int(studierendeId)) > 1
+        result = self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", str(studierendeId))
+        print(result)
+        return result# > 0 and self.db.delete(f"DELETE FROM teilnahme WHERE teilname.studierendeId = ?", int(studierendeId)) > 0
 
     def get_one(self, studierendeId: int):
-        row = self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ? LIMIT 1", int(studierendeId))
-        row = row[0]
+        row = self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ?", str(studierendeId))
         return Studierender(*row)
     
     def get_all(self):

@@ -1,5 +1,5 @@
 class Studierender:
-    def __init__(self, name, matrikelnummer, studiengang, id=None):
+    def __init__(self, name: str, matrikelnummer: str, studiengang: str, id: int=None):
         self.id = id
         self.name = name
         self.matrikelnummer = matrikelnummer
@@ -11,7 +11,7 @@ class Studierender:
         return self.__id
     
     @id.setter
-    def id(self, value):
+    def id(self, value: int):
         self.__id = value
 
     # Name
@@ -20,7 +20,7 @@ class Studierender:
         return self.__name
     
     @name.setter
-    def name(self, value):
+    def name(self, value: str):
         self.__name = value
 
     # matrikelnummer
@@ -29,7 +29,7 @@ class Studierender:
         return self.__matrikelnummer
     
     @matrikelnummer.setter
-    def matrikelnummer(self, value):
+    def matrikelnummer(self, value: str):
         self.__matrikelnummer = value
 
     # studiengang
@@ -38,7 +38,7 @@ class Studierender:
         return self.__studiengang
     
     @studiengang.setter
-    def studiengang(self, value):
+    def studiengang(self, value: str):
         self.__studiengang = value
 
     def __str__(self):
