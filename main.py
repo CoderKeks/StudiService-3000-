@@ -3,11 +3,8 @@ from GUI.MainMenuFrame import MainMenuFrame
 from GUI.StudentListFrame import StudentListFrame
 from Service.KursService import KursService
 from Service.StudierendeService import StudierendeService
-""" import Models
 from GraphicalUserInterface import GraphicalUserInterface
-import Models.Kurs
-import Service
-import Service.KursService """
+from Models.Kurs import Kurs
 
 # todo: implement .env for config values like window size and database file name
 
@@ -47,6 +44,5 @@ if __name__ == "__main__":
     App().mainloop()
 
 """ if __name__ == "__main__":
-    Service.KursService.KursService().create(Models.Kurs.Kurs('Deutsch', 'Ruhl', 1))    
+    KursService().create(Kurs('Deutsch', 'Ruhl', 1))    
     ui = GraphicalUserInterface() """
-    

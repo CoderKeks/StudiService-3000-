@@ -39,12 +39,13 @@ class ScrollList(tk.Frame):
         return self.listbox.get(selection) if selection else None
 
 class LabeledEntry(tk.Frame):
-    def __init__(self, master, label, **kwargs):
+    def __init__(self, master, label, initial_value="", **kwargs):
         super().__init__(master, **kwargs)
-        self.label = tk.Label(self, text=label)
+        tk.Label(self, text=label).pack(side="left", padx=(0, 5))
         self.entry = tk.Entry(self)
-        self.label.pack(side="left", padx=(0, 5))
         self.entry.pack(side="left", fill="x", expand=True)
+        if initial_value:
+            self.set(initial_value)
 
     def get(self):
         return self.entry.get()
@@ -73,31 +74,26 @@ class LabeledDropdown(tk.Frame):
 class Popup(tk.Toplevel):
     def __init__(self, master, title="Hinweis", content=None, button_text="OK", on_close=None, **kwargs):
         super().__init__(master, **kwargs)
+
         self.title(title)
         self.grab_set()
         self.resizable(False, False)
-        #self.configure(bg="#f0f4f8")
         self.geometry("+%d+%d" % (master.winfo_rootx() + 100, master.winfo_rooty() + 100))
 
-        # Optional: Title label
-        label = tk.Label(self, text=title, font=('Times New Roman', 16, 'bold'), bg="#f0f4f8")
-        label.pack(padx=30, pady=(20, 10))
+        tk.Label(self, text=title, font=('Times New Roman', 16, 'bold')).pack(padx=30, pady=(20, 10))
 
-        # Content: can be a widget or a string
-        if content is not None:
-            if isinstance(content, tk.Widget):
-                content.pack(padx=30, pady=(0, 15))
-            else:
-                msg = tk.Label(self, text=str(content), font=('Times New Roman', 13), bg="#f0f4f8", wraplength=350)
-                msg.pack(padx=30, pady=(0, 15))
+        if content is not None and isinstance(content, tk.Widget):
+            self.content = content
+        elif content is not None:
+                tk.Label(self, text=str(content), font=('Times New Roman', 13), wraplength=350).pack(padx=30, pady=(0, 15))
 
-        button = Button(self, text=button_text, command=self._close, width=12)
-        button.pack(pady=(0, 20))
+        #Button(self, text=button_text, command=self._close, width=10, height=1).pack(pady=(0, 20))
 
         self.on_close = on_close
         self.protocol("WM_DELETE_WINDOW", self._close)
 
     def _close(self):
         if self.on_close:
+            
             self.on_close()
         self.destroy()

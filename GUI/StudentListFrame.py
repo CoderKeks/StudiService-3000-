@@ -1,6 +1,7 @@
 import tkinter as tk
+from Models.Studierender import Studierender
 from Service.StudierendeService import StudierendeService
-from GUI.widgets import Button
+from GUI.widgets import Button, Popup, LabeledEntry
 
 class StudentListFrame(tk.Frame):
     def __init__(self, master, show_main_menu, create_student_callback=None, edit_callback=None, delete_callback=None):
@@ -28,7 +29,7 @@ class StudentListFrame(tk.Frame):
         left_frame.rowconfigure(2, weight=0)
         left_frame.columnconfigure(0, weight=1)
 
-        back_btn = Button(left_frame, text="< Zurück", command=show_main_menu, width = 8, height = 1)
+        back_btn = Button(self, text="< Zurück", command=show_main_menu, width = 8, height = 1)
         back_btn.grid(row=0, column=0, sticky="nw", pady=(0, 20))
 
         create_btn = Button(
@@ -70,7 +71,7 @@ class StudentListFrame(tk.Frame):
         canvas.bind('<Configure>', on_configure)
 
         students = self.studierender_service.get_all()
-        for idx, student in enumerate(students):
+        for student in students:
             entry_frame = tk.Frame(list_container, bg="grey", bd=1, relief="solid")
             entry_frame.pack(fill="x", pady=6, padx=10)
 
@@ -83,7 +84,7 @@ class StudentListFrame(tk.Frame):
             edit_btn = Button(
                 entry_frame,
                 text="Bearbeiten",
-                command=lambda student: self.studierender_service.update(student.id, student) if self.studierender_service.update else None,
+                command=lambda s=student: self.open_student_popup(s),
                 width=8,
                 height=1,
                 font=('times', 10)
@@ -100,3 +101,17 @@ class StudentListFrame(tk.Frame):
                 font=('times', 10)
             )
             delete_btn.pack(side="left", padx=5, pady=5)
+
+    def open_student_popup(self, student: Studierender):
+
+        popup = Popup(self, title="Student anlegen", button_text="Speichern")
+
+        content = tk.Frame(popup)
+
+        LabeledEntry(content, "Name: ", student.name).pack()
+        LabeledEntry(content, "Matrikelnummer: ", student.matrikelnummer).pack()
+        LabeledEntry(content, "Studiengang: ", student.studiengang).pack()
+        
+        content.pack(padx=30, pady=(0, 15))
+
+        popup.content = content
