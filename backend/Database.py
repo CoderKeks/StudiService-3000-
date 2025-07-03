@@ -9,7 +9,7 @@ class Database:
         with cls._lock:
             if cls._instance is None:
                 cls._instance = super(Database, cls).__new__(cls)
-                cls._instance._init(db_path)
+                cls._instance._init(db_path, check_same_thread=False)
                 cls._instance.create('PRAGMA foreign_keys = ON')
                 cls._instance.create(f"""
                        CREATE TABLE IF NOT EXISTS kurs
@@ -39,7 +39,7 @@ class Database:
         return cls._instance
 
     def _init(self, db_path, check_same_thread=False):
-        self.connection = sqlite3.connect(db_path, check_same_thread)
+        self.connection = sqlite3.connect(db_path, check_same_thread=check_same_thread)
         self.cursor = self.connection.cursor()
 
     def create(self, query, params=None):
