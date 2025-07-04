@@ -1,4 +1,7 @@
+import csv
 import tkinter as tk
+from tkinter import messagebox
+from tkinter import filedialog
 from Service.KursService import KursService
 from GUI.widgets import Button, LabeledEntry, Popup
 from Models.Kurs import Kurs
@@ -39,6 +42,14 @@ class KursListFrame(tk.Frame):
             bg="green"
         )
         create_btn.grid(row=1, column=0, sticky="n", pady=(0, 0))
+
+        export_btn = Button(
+            left_frame,
+            text="CSV Export",
+            command=self.export_kurse_csv,
+            bg="green"
+        )
+        export_btn.grid(row=1, column=0, sticky="n", pady=(100, 0))
 
         # Right panel
         right_title = tk.Label(
@@ -163,3 +174,25 @@ class KursListFrame(tk.Frame):
     def reload(self):
         if hasattr(self.master, "show_courses"):
             self.master.show_courses()
+
+    def export_kurse_csv(self):
+        kurse = self.kurs_service.get_all()
+        if not kurse:
+            messagebox.showinfo("Export", "Keine Studierenden zum Exportieren vorhanden.")
+            return
+
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".csv",
+            filetypes=[("CSV-Dateien", "*.csv")],
+            title="Kurse als CSV exportieren"
+        )
+        if not file_path:
+            return
+
+        with open(file_path, mode="w", newline='', encoding="utf-8") as csvfile:
+            writer = csv.writer(csvfile, delimiter=";")
+            writer.writerow(["ID", "Kursname", "Dozent", "Semester"])
+            for s in kurse:
+                writer.writerow([s.id, s.kursname, s.dozent, s.semester])
+
+        messagebox.showinfo("Export", f"Export erfolgreich:\n{file_path}")
