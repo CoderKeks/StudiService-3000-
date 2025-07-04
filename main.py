@@ -1,26 +1,24 @@
 import tkinter as tk
 from GUI.KursListFrame import KursListFrame
-from GUI.MainMenuFrame import MainMenuFrame 
+from GUI.MainMenuFrame import MainMenuFrame
 from GUI.StudentListFrame import StudentListFrame
 from Service.KursService import KursService
 from Service.StudierendeService import StudierendeService
-from GraphicalUserInterface import GraphicalUserInterface
 from Models.Kurs import Kurs
-from Models.Studierender import Studierender
 
 # todo: implement .env for config values like window size and database file name
 
-#config
+# config
 PROJECT_NAME = "Studi-Service-3000"
 
 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        
+
         self.kurs_service = KursService()
         self.studierender_service = StudierendeService()
-        
+
         self.title(PROJECT_NAME)
         self.geometry("%dx%d" % (self.winfo_screenwidth(), self.winfo_screenheight()))
         self.show_main_menu()
@@ -40,9 +38,10 @@ class App(tk.Tk):
         self._frame = frame
         self._frame.pack(fill="both", expand=True)
 
+
 if __name__ == "__main__":
     studi_service = StudierendeService()
-    
+
     # Testdaten erzeugen
     kurs_id = KursService().create(Kurs('ITS', 'Dörr', 1))
 
