@@ -135,13 +135,11 @@ class StudentListFrame(tk.Frame):
         return Studierender(name, matrikelnummer, studiengang)
     
     def edit_student(self, student: Studierender, name, matrikelnummer, studiengang, popup):
-        print("before", student)
         student.name = name
         student.matrikelnummer = matrikelnummer
         student.studiengang = studiengang
-        print("after", student)
         result = self.studierender_service.update(student.id, student)
-        
+
         if result > 0:
             if popup is not None:
                 popup.destroy()
@@ -161,5 +159,4 @@ class StudentListFrame(tk.Frame):
 
     def reload(self):
         if hasattr(self.master, "show_students"):
-            print("Reloading")
             self.master.show_students()

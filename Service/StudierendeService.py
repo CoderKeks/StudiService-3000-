@@ -23,14 +23,14 @@ class StudierendeService:
                         name = ?,
                         matrikelnummer = ?,
                         studiengang = ?
-                        WHERE studierende.id = ?;""", (studierender.name, studierender.matrikelnummer, studierender.studiengang, int(studierendeId)))
+                        WHERE studierende.id = ?;""", (studierender.name, studierender.matrikelnummer, studierender.studiengang, [studierendeId]))
         
     def delete(self, studierendeId: int):
-        result = self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", str(studierendeId))
+        result = self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", [studierendeId])
         return result
 
     def get_one(self, studierendeId: int):
-        row = self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ?", str(studierendeId))
+        row = self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ?", [studierendeId])
         return Studierender(*row)
     
     def get_all(self):
@@ -38,4 +38,4 @@ class StudierendeService:
         return [Studierender(*row) for row in rows]
     
     def add_to_kurs(self, studierendeId, kursId):
-        return self.db.create("INSERT INTO teilname (studierendeId, kursId) VALUES ?, ?", int(studierendeId), int(kursId))
+        return self.db.create("INSERT INTO teilname (studierendeId, kursId) VALUES ?, ?", [studierendeId], [kursId])

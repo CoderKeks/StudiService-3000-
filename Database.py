@@ -57,6 +57,7 @@ class Database:
         return self.cursor.rowcount
 
     def delete(self, query, params=None):
+        print(query, " | ", params)
         self.cursor.execute(query, params or ())
         self.connection.commit()
         return self.cursor.rowcount
