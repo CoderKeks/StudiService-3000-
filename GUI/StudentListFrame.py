@@ -38,10 +38,14 @@ class StudentListFrame(tk.Frame):
         back_btn = Button(self, text="< Zurück", command=show_main_menu, width=8, height=1)
         back_btn.grid(row=0, column=0, sticky="nw", pady=(0, 20))
 
+        def handle_create_student():
+            self.open_popup()
+            self.show_student_form()
+
         create_btn = Button(
             left_frame,
             text="Neuen Studenten anlegen",
-            command=self.show_student_form,
+            command=handle_create_student,
             bg="blue"
         )
         create_btn.grid(row=1, column=0, sticky="n", pady=(0, 0))
@@ -195,7 +199,7 @@ class StudentListFrame(tk.Frame):
                 text="Student zu neuem Kurs hinzufügen",
                 command=render_kurs_verknuepfung)
 
-            add_verknuepfung_btn.pack()
+            add_verknuepfung_btn.pack(fill='x')
 
         save_btn = Button(
             self.popup_content,
@@ -214,7 +218,7 @@ class StudentListFrame(tk.Frame):
                 self.popup
             )
         )
-        save_btn.pack(padx=10, pady=10)
+        save_btn.pack(fill='x', padx=10, pady=10)
 
         self.popup_content.pack(fill='both')
         self.popup.content = self.popup_content

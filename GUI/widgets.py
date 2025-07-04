@@ -84,7 +84,7 @@ class Popup(tk.Toplevel):
         self.title(title)
         self.grab_set()
         self.resizable(False, False)
-        self.geometry("+%d+%d" % (master.winfo_rootx() + 400, master.winfo_rooty() + 150))
+        self.geometry('1200x800')
 
         tk.Label(self, text=title, font=('Times', 16, 'bold')).pack(padx=30, pady=(20, 10))
 
