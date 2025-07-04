@@ -72,7 +72,7 @@ class LabeledDropdown(tk.Frame):
         self.var.set(value)
 
 class Popup(tk.Toplevel):
-    def __init__(self, master, title="Hinweis", content=None, button_text="OK", on_close=None, **kwargs):
+    def __init__(self, master, title="Hinweis", content=None, on_close=None, **kwargs):
         super().__init__(master, **kwargs)
 
         self.title(title)
@@ -86,8 +86,6 @@ class Popup(tk.Toplevel):
             self.content = content
         elif content is not None:
                 tk.Label(self, text=str(content), font=('Times New Roman', 13), wraplength=350).pack(padx=30, pady=(0, 15))
-
-        #Button(self, text=button_text, command=self._close, width=10, height=1).pack(pady=(0, 20))
 
         self.on_close = on_close
         self.protocol("WM_DELETE_WINDOW", self._close)

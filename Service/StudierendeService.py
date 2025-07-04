@@ -6,6 +6,7 @@ class StudierendeService:
          self.db = Database("./database.db")
 
     def create(self, studierender: Studierender):
+        print(studierender)
         return self.db.create(f"""
                         INSERT INTO studierende (
                             name,
@@ -26,8 +27,7 @@ class StudierendeService:
         
     def delete(self, studierendeId: int):
         result = self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", str(studierendeId))
-        print(result)
-        return result# > 0 and self.db.delete(f"DELETE FROM teilnahme WHERE teilname.studierendeId = ?", int(studierendeId)) > 0
+        return result
 
     def get_one(self, studierendeId: int):
         row = self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ?", str(studierendeId))

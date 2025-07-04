@@ -35,7 +35,7 @@ class StudentListFrame(tk.Frame):
         create_btn = Button(
             left_frame,
             text="Neuen Studenten anlegen",
-            command=create_student_callback if create_student_callback else lambda: None,
+            command=self.show_student_form,
             bg="blue"
         )
         create_btn.grid(row=1, column=0, sticky="n", pady=(0, 0))
@@ -84,7 +84,7 @@ class StudentListFrame(tk.Frame):
             edit_btn = Button(
                 entry_frame,
                 text="Bearbeiten",
-                command=lambda s=student: self.open_student_popup(s),
+                command=lambda s=student: self.show_student_form(s, "Student editieren"),
                 width=8,
                 height=1,
                 font=('times', 10)
@@ -94,7 +94,7 @@ class StudentListFrame(tk.Frame):
             delete_btn = Button(
                 entry_frame,
                 text="Löschen",
-                command=lambda student: self.studierender_service.delete(student.id) if self.studierender_service.delete else None,
+                command=lambda s=student: self.delete_student(s.id),
                 bg="red",
                 width=8,
                 height=1,
@@ -102,16 +102,64 @@ class StudentListFrame(tk.Frame):
             )
             delete_btn.pack(side="left", padx=5, pady=5)
 
-    def open_student_popup(self, student: Studierender):
-
-        popup = Popup(self, title="Student anlegen", button_text="Speichern")
-
+    def show_student_form(self, student: Studierender = None, title: str = "Student anlegen"):
+        popup = Popup(self, title)
         content = tk.Frame(popup)
 
-        LabeledEntry(content, "Name: ", student.name).pack()
-        LabeledEntry(content, "Matrikelnummer: ", student.matrikelnummer).pack()
-        LabeledEntry(content, "Studiengang: ", student.studiengang).pack()
-        
-        content.pack(padx=30, pady=(0, 15))
+        name_entry = LabeledEntry(content, "Name: ", student.name if student else "")
+        name_entry.pack()
+        matrikelnummer_entry = LabeledEntry(content, "Matrikelnummer: ", student.matrikelnummer if student else "")
+        matrikelnummer_entry.pack()
+        studiengang_entry = LabeledEntry(content, "Studiengang: ", student.studiengang if student else "")
+        studiengang_entry.pack()
+        save_btn = Button(
+            content,
+            text="Speichern",
+            command=lambda: self.edit_student(student, name_entry.get(), matrikelnummer_entry.get(), studiengang_entry.get(), popup)
+            if student
+            else self.save_student(
+                self.create_student(
+                    name_entry.get(),
+                    matrikelnummer_entry.get(),
+                    studiengang_entry.get()
+                ),
+                popup
+            )
+        )
+        save_btn.pack()
 
+        content.pack()
         popup.content = content
+
+    def create_student(self, name: str, matrikelnummer: str, studiengang: str):
+        return Studierender(name, matrikelnummer, studiengang)
+    
+    def edit_student(self, student: Studierender, name, matrikelnummer, studiengang, popup):
+        print("before", student)
+        student.name = name
+        student.matrikelnummer = matrikelnummer
+        student.studiengang = studiengang
+        print("after", student)
+        result = self.studierender_service.update(student.id, student)
+        
+        if result > 0:
+            if popup is not None:
+                popup.destroy()
+            self.reload()
+
+    def save_student(self, student: Studierender, popup=None):
+        result = self.studierender_service.create(student)
+
+        if result > 0:
+            if popup is not None:
+                popup.destroy()
+            self.reload()
+
+    def delete_student(self, student_id: int):
+        if self.studierender_service.delete(student_id) > 0 :
+            self.reload()
+
+    def reload(self):
+        if hasattr(self.master, "show_students"):
+            print("Reloading")
+            self.master.show_students()
