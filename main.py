@@ -11,8 +11,7 @@ from Models.Studierender import Studierender
 
 #config
 PROJECT_NAME = "Studi-Service-3000"
-WIDTH = 1000
-HEIGHT = 500
+
 
 class App(tk.Tk):
     def __init__(self):
@@ -22,7 +21,7 @@ class App(tk.Tk):
         self.studierender_service = StudierendeService()
         
         self.title(PROJECT_NAME)
-        self.geometry(f"{WIDTH}x{HEIGHT}")
+        self.geometry("%dx%d" % (self.winfo_screenwidth(), self.winfo_screenheight()))
         self.show_main_menu()
 
     def show_main_menu(self):
@@ -46,8 +45,6 @@ if __name__ == "__main__":
     
     # Testdaten erzeugen
     kurs_id = KursService().create(Kurs('ITS', 'Dörr', 1))
-    studi_id = studi_service.create(Studierender('Leander', '234234', 'Informatik'))
-    print(studi_service.add_to_kurs(studi_id, kurs_id))
 
     # GUI starten
     App().mainloop()

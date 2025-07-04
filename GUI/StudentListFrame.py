@@ -24,7 +24,7 @@ class StudentListFrame(tk.Frame):
         )
         left_title.grid(row=0, column=0, sticky="ew", padx=(30, 10), pady=(5, 0))
 
-        left_frame = tk.Frame(self, bg="red")
+        left_frame = tk.Frame(self)
         left_frame.grid(row=1, column=0, sticky="nsew", padx=(30, 10), pady=10)
         left_frame.rowconfigure(0, weight=0)
         left_frame.rowconfigure(1, weight=1)
@@ -56,7 +56,7 @@ class StudentListFrame(tk.Frame):
         right_frame.columnconfigure(0, weight=1)
 
         # Scrollable list container
-        canvas = tk.Canvas(right_frame, bg="pink", highlightthickness=0)
+        canvas = tk.Canvas(right_frame, bg="white", highlightthickness=0)
         canvas.grid(row=0, column=0, sticky="nsew")
         scrollbar = tk.Scrollbar(right_frame, orient="vertical", command=canvas.yview)
         scrollbar.grid(row=0, column=1, sticky="ns")
@@ -72,6 +72,10 @@ class StudentListFrame(tk.Frame):
         list_container.bind("<Configure>", on_configure)
         canvas.bind('<Configure>', on_configure)
 
+        def handle_edit_student(s):
+            self.open_popup()
+            self.show_student_form(s)
+
         students = self.studierender_service.get_all()
         for student in students:
             entry_frame = tk.Frame(list_container, bg="grey", bd=1, relief="solid")
@@ -86,7 +90,7 @@ class StudentListFrame(tk.Frame):
             edit_btn = Button(
                 entry_frame,
                 text="Bearbeiten",
-                command=lambda s=student: self.show_student_form(s, "Student editieren"),
+                command=lambda s=student: handle_edit_student(s),
                 width=8,
                 height=1,
                 font=('times', 10)
@@ -104,27 +108,29 @@ class StudentListFrame(tk.Frame):
             )
             delete_btn.pack(side="left", padx=5, pady=5)
 
-    def show_student_form(self, student: Studierender = None, title: str = "Student anlegen"):
-        popup = Popup(self, title)
-        content = tk.Frame(popup)
+    def open_popup(self):
+        self.popup = Popup(self)
+        self.popup_content = tk.Frame(self.popup)
 
-        name_entry = LabeledEntry(content, "Name: ", student.name if student else "")
+    def show_student_form(self, student: Studierender = None):
+        self.popup_content.destroy()
+        self.popup_content = tk.Frame(self.popup)
+
+        name_entry = LabeledEntry(self.popup_content, "Name: ", student.name if student else "")
         name_entry.pack()
-        matrikelnummer_entry = LabeledEntry(content, "Matrikelnummer: ", student.matrikelnummer if student else "")
+        matrikelnummer_entry = LabeledEntry(self.popup_content, "Matrikelnummer: ", student.matrikelnummer if student else "")
         matrikelnummer_entry.pack()
-        studiengang_entry = LabeledEntry(content, "Studiengang: ", student.studiengang if student else "")
+        studiengang_entry = LabeledEntry(self.popup_content, "Studiengang: ", student.studiengang if student else "")
         studiengang_entry.pack()
-
-        # Hier Kurs-liste implementieren
 
         if student:
             # Scrollable list container
             # Wrapper-Frame für Canvas und Scrollbar
-            scroll_frame = tk.Frame(popup)
+            scroll_frame = tk.Frame(self.popup_content)
             scroll_frame.pack(fill="both", expand=True)
 
             # Canvas für den Inhalt
-            canvas = tk.Canvas(scroll_frame, bg="pink", highlightthickness=0)
+            canvas = tk.Canvas(scroll_frame, bg='white', highlightthickness=0)
             canvas.pack(side="left", fill="both", expand=True)
 
             # Scrollbar direkt rechts neben der Canvas
@@ -144,7 +150,6 @@ class StudentListFrame(tk.Frame):
             list_container.bind("<Configure>", on_configure)
             canvas.bind('<Configure>', on_configure)
 
-            
             kurse = self.studierender_service.get_all_kurse_for_studierender(student.id)
             for kurs in kurse:
                 entry_frame = tk.Frame(list_container, bg="grey", bd=1, relief="solid")
@@ -160,7 +165,7 @@ class StudentListFrame(tk.Frame):
                 delete_btn = Button(
                     entry_frame,
                     text="Löschen",
-                    command=lambda k=kurs: self.remove_student_from_kurs(student.id, k.id),
+                    command=lambda k=kurs: self.remove_student_from_kurs(student, k.id),
                     bg="red",
                     width=8,
                     height=1,
@@ -168,18 +173,21 @@ class StudentListFrame(tk.Frame):
                 )
                 delete_btn.pack(side="left", padx=5, pady=5)
 
+            def render_kurs_verknuepfung():
+                self.show_kurs_verknuepfung(student)
+
             # Button um Student zu kursen hinzuzufügen
             add_verknuepfung_btn = Button(
-            content,
-            text="Speichern",
-            command=self.show_kurs_verknuepfung_popup(student))
+            self.popup_content,
+            text="Student zu neuem Kurs hinzufügen",
+            command=render_kurs_verknuepfung)
 
             add_verknuepfung_btn.pack()
 
         save_btn = Button(
-            content,
-            text="Student zu neuem Kurs hinzufügen",
-            command=lambda: self.edit_student(student, name_entry.get(), matrikelnummer_entry.get(), studiengang_entry.get(), popup)
+            self.popup_content,
+            text="Speichern",
+            command=lambda: self.edit_student(student, name_entry.get(), matrikelnummer_entry.get(), studiengang_entry.get(), self.popup)
             if student
             else self.save_student(
                 self.create_student(
@@ -187,19 +195,22 @@ class StudentListFrame(tk.Frame):
                     matrikelnummer_entry.get(),
                     studiengang_entry.get()
                 ),
-                popup
+                self.popup
             )
         )
         save_btn.pack()
 
-        content.pack()
-        popup.content = content
+        self.popup_content.pack(fill='both')
+        self.popup.content = self.popup_content
 
-    def show_kurs_verknuepfung_popup(self, student: Studierender):
-        popup = Popup(self, f"Kurse mit {student.name} verknüpfen")
+
+
+    def show_kurs_verknuepfung(self, student: Studierender):
+        self.popup_content.destroy()
+        self.popup_content = tk.Frame(self.popup)
 
         # Wrapper für Scrollbereich
-        scroll_frame = tk.Frame(popup)
+        scroll_frame = tk.Frame(self.popup_content)
         scroll_frame.pack(fill="both", expand=True)
 
         canvas = tk.Canvas(scroll_frame, bg="lightblue", highlightthickness=0)
@@ -222,11 +233,11 @@ class StudentListFrame(tk.Frame):
 
         # Hole alle Kurse (du brauchst ggf. self.kurs_service.get_all() oder so ähnlich)
         # todo: hier methode schreiben, die nur kurse holt, in denen der Student noch nicht ist
-        alle_kurse = self.kurs_service.get_all()
+        alle_kurse = self.studierender_service.get_all_kurse_where_studierender_is_not_part_of(student.id)
 
         for kurs in alle_kurse:
-            entry_frame = tk.Frame(list_container, bg="grey", bd=1, relief="solid")
-            entry_frame.pack(fill="x", pady=6, padx=10)
+            entry_frame = tk.Frame(list_container, bg="white", bd=1, relief="solid")
+            entry_frame.pack(fill='both', pady=6, padx=10)
 
             label = tk.Label(
                 entry_frame,
@@ -235,12 +246,10 @@ class StudentListFrame(tk.Frame):
             )
             label.pack(side="left", padx=(10, 20), pady=8, expand=True, fill="x")
 
-            print(student, kurs)
-
             verknuepfen_btn = Button(
                 entry_frame,
                 text="Verknüpfen",
-                command=lambda k=kurs: self.add_student_to_kurs(student.id, k.id),
+                command=lambda k=kurs: self.add_student_to_kurs(student, k.id),
                 bg="green",
                 fg="white",
                 width=10,
@@ -248,6 +257,9 @@ class StudentListFrame(tk.Frame):
                 font=('times', 10)
             )
             verknuepfen_btn.pack(side="left", padx=5, pady=5)
+
+        self.popup_content.pack(fill='both')
+        self.popup.content = self.popup_content
 
     def create_student(self, name: str, matrikelnummer: str, studiengang: str):
         return Studierender(name, matrikelnummer, studiengang)
@@ -277,13 +289,13 @@ class StudentListFrame(tk.Frame):
         if self.studierender_service.delete(student_id) > 0 :
             self.reload()
 
-    def remove_student_from_kurs(self, student_id: int, kurs_id: int):
-        if self.studierender_service.delete_from_kurs(student_id, kurs_id) > 0:
-            self.reload()
+    def remove_student_from_kurs(self, student: Studierender, kurs_id: int):
+        if self.studierender_service.delete_from_kurs(student.id, kurs_id) > 0:
+            self.show_student_form(student)
 
-    def add_student_to_kurs(self, student_id: int, kurs_id: int):
-        if self.studierender_service.add_to_kurs(student_id, kurs_id) > 0:
-            self.reload()
+    def add_student_to_kurs(self, student: Studierender, kurs_id: int):
+        if self.studierender_service.add_to_kurs(student.id, kurs_id) > 0:
+            self.show_student_form(student)
 
     def reload(self):
         if hasattr(self.master, "show_students"):

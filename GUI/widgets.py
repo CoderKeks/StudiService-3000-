@@ -72,13 +72,13 @@ class LabeledDropdown(tk.Frame):
         self.var.set(value)
 
 class Popup(tk.Toplevel):
-    def __init__(self, master, title="Hinweis", content=None, on_close=None, **kwargs):
+    def __init__(self, master:tk.Tk, title="Hinweis", content=None, on_close=None, **kwargs):
         super().__init__(master, **kwargs)
 
         self.title(title)
         self.grab_set()
-        # self.resizable(False, False)
-        self.geometry("+%d+%d" % (master.winfo_rootx() + 100, master.winfo_rooty() + 100))
+        self.geometry("1200x800")
+        self.resizable(False, False)
 
         tk.Label(self, text=title, font=('Times New Roman', 16, 'bold')).pack(padx=30, pady=(20, 10))
 

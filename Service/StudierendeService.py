@@ -44,6 +44,16 @@ class StudierendeService:
                             JOIN teilnahme T on T.kursId = K.id
                             WHERE T.studierendeId = ?""", (str(studierenderId),))
         return [Kurs(*row) for row in rows]
+    
+    def get_all_kurse_where_studierender_is_not_part_of(self, studierenderId: int):
+        rows = self.db.read("""SELECT *
+                            FROM kurs
+                            WHERE id NOT IN (
+                                SELECT kursId
+                                FROM teilnahme
+                                WHERE studierendeId = ?
+                            );""", (str(studierenderId),))
+        return [Kurs(*row) for row in rows]
 
     def delete_from_kurs(self, studierendeId, kursId):
         return self.db.delete("DELETE FROM teilnahme WHERE kursId = ? AND studierendeId = ?", (str(kursId), str(studierendeId)))
