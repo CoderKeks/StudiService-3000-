@@ -5,6 +5,7 @@ from Service.KursService import KursService
 from Service.StudierendeService import StudierendeService
 from GraphicalUserInterface import GraphicalUserInterface
 from Models.Kurs import Kurs
+from Models.Studierender import Studierender
 
 # todo: implement .env for config values like window size and database file name
 
@@ -41,6 +42,14 @@ class App(tk.Tk):
         self._frame.pack(fill="both", expand=True)
 
 if __name__ == "__main__":
+    studi_service = StudierendeService()
+    
+    # Testdaten erzeugen
+    kurs_id = KursService().create(Kurs('ITS', 'Dörr', 1))
+    studi_id = studi_service.create(Studierender('Leander', '234234', 'Informatik'))
+    print(studi_service.add_to_kurs(studi_id, kurs_id))
+
+    # GUI starten
     App().mainloop()
 
 """ if __name__ == "__main__":

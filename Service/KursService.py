@@ -33,5 +33,5 @@ class KursService:
         return Kurs(*row[0])
     
     def get_all(self):
-        rows = self.db.read("SELECT * FROM kurs")
+        rows = self.db.read("SELECT kursname, dozent, semester, id FROM kurs")
         return [Kurs(*row) for row in rows]

@@ -11,7 +11,7 @@ class Database:
                 cls._instance = super(Database, cls).__new__(cls)
                 cls._instance._init(db_path)
                 cls._instance.create('PRAGMA foreign_keys = ON')
-                cls._instance.create(f"""
+                cls._instance.create("""
                        CREATE TABLE IF NOT EXISTS kurs
                        (
                         kursname TEXT NOT NULL,
@@ -19,7 +19,7 @@ class Database:
                         semester INTEGER NOT NULL,
                         id INTEGER PRIMARY KEY
                        );""")
-                cls._instance.create(f"""
+                cls._instance.create("""
                        CREATE TABLE IF NOT EXISTS studierende
                        (
                         name TEXT NOT NULL,
@@ -27,7 +27,7 @@ class Database:
                         studiengang TEXT NOT NULL,
                         id INTEGER PRIMARY KEY
                        );""")
-                cls._instance.create(f"""
+                cls._instance.create("""
                        CREATE TABLE IF NOT EXISTS teilnahme
                        (
                         kursId INTEGER NOT NULL,
