@@ -78,9 +78,9 @@ class Popup(tk.Toplevel):
         self.title(title)
         self.grab_set()
         self.resizable(False, False)
-        self.geometry("+%d+%d" % (master.winfo_rootx() + 100, master.winfo_rooty() + 100))
+        self.geometry("+%d+%d" % (master.winfo_rootx() + 400, master.winfo_rooty() + 150))
 
-        tk.Label(self, text=title, font=('Times New Roman', 16, 'bold')).pack(padx=30, pady=(20, 10))
+        tk.Label(self, text=title, font=('Times', 16, 'bold')).pack(padx=30, pady=(20, 10))
 
         if content is not None and isinstance(content, tk.Widget):
             self.content = content

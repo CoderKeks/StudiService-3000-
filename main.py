@@ -1,4 +1,5 @@
 import tkinter as tk
+from GUI.KursListFrame import KursListFrame
 from GUI.MainMenuFrame import MainMenuFrame 
 from GUI.StudentListFrame import StudentListFrame
 from Service.KursService import KursService
@@ -31,8 +32,7 @@ class App(tk.Tk):
         self._show_frame(StudentListFrame(self, self.show_main_menu))
 
     def show_courses(self):
-        # Placeholder for course list frame, implement analog to show_students
-        pass
+        self._show_frame(KursListFrame(self, self.show_main_menu))
 
     def _show_frame(self, frame):
         if hasattr(self, "_frame") and self._frame is not None:

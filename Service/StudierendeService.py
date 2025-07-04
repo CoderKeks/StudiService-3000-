@@ -23,7 +23,7 @@ class StudierendeService:
                         name = ?,
                         matrikelnummer = ?,
                         studiengang = ?
-                        WHERE studierende.id = ?;""", (studierender.name, studierender.matrikelnummer, studierender.studiengang, [studierendeId]))
+                        WHERE studierende.id = ?;""", (studierender.name, studierender.matrikelnummer, studierender.studiengang, studierendeId))
         
     def delete(self, studierendeId: int):
         result = self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", [studierendeId])
