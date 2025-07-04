@@ -62,4 +62,4 @@ class StudierendeService:
                               (str(kursId), str(studierendeId)))
 
     def add_to_kurs(self, studierendeId, kursId):
-        return self.db.update("INSERT INTO teilname (studierendeId, kursId) VALUES ?, ?", [studierendeId], [kursId])
+        return self.db.update("INSERT INTO teilnahme (studierendeId, kursId) VALUES(?, ?)", (studierendeId, kursId))
