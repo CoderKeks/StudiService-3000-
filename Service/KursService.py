@@ -23,13 +23,13 @@ class KursService:
                         kursname = ?,
                         dozent = ?,
                         semester = ?
-                        WHERE kurs.id = ?;""", (kurs.kursname, kurs.dozent, kurs.semester, str(kursID)))
+                        WHERE kurs.id = ?;""", (kurs.kursname, kurs.dozent, kurs.semester, kursID))
         
     def delete(self, kursID: int):
-        return self.db.delete("DELETE FROM kurs WHERE kurs.id = ?", str(kursID)) > 1 and self.db.delete("DELETE FROM teilnahme WHERE teilname.kursId = ?", str(kursID)) > 1
+        return self.db.delete("DELETE FROM kurs WHERE kurs.id = ?", [kursID])
 
     def get_one(self, kursID: int):
-        row = self.db.read("SELECT * FROM kurs WHERE kurs.id = ? LIMIT 1", str(kursID))
+        row = self.db.read("SELECT * FROM kurs WHERE kurs.id = ? LIMIT 1", [kursID])
         return Kurs(*row[0])
     
     def get_all(self):

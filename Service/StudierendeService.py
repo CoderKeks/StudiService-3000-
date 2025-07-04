@@ -2,9 +2,10 @@ from Database import Database
 from Models.Studierender import Studierender
 from Models.Kurs import Kurs
 
+
 class StudierendeService:
     def __init__(self):
-         self.db = Database("./database.db")
+        self.db = Database("./database.db")
 
     def create(self, studierender: Studierender):
         print(studierender)
@@ -24,27 +25,28 @@ class StudierendeService:
                         name = ?,
                         matrikelnummer = ?,
                         studiengang = ?
-                        WHERE studierende.id = ?;""", (studierender.name, studierender.matrikelnummer, studierender.studiengang, int(studierendeId)))
-        
+                        WHERE studierende.id = ?;""",
+                              (studierender.name, studierender.matrikelnummer, studierender.studiengang, studierendeId))
+
     def delete(self, studierendeId: int):
-        result = self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", str(studierendeId))
+        result = self.db.delete(f"DELETE FROM studierende WHERE studierende.id = ?", [studierendeId])
         return result
 
     def get_one(self, studierendeId: int):
-        row = self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ?", str(studierendeId))
+        row = self.db.read(f"SELECT * FROM studierende WHERE studierende.id = ?", [studierendeId])
         return Studierender(*row)
-    
+
     def get_all(self):
         rows = self.db.read("SELECT name, matrikelnummer, studiengang, id FROM studierende")
         return [Studierender(*row) for row in rows]
-    
+
     def get_all_kurse_for_studierender(self, studierenderId):
         rows = self.db.read("""SELECT K.*
                             FROM kurs K
                             JOIN teilnahme T on T.kursId = K.id
                             WHERE T.studierendeId = ?""", (str(studierenderId),))
         return [Kurs(*row) for row in rows]
-    
+
     def get_all_kurse_where_studierender_is_not_part_of(self, studierenderId: int):
         rows = self.db.read("""SELECT *
                             FROM kurs
@@ -56,7 +58,8 @@ class StudierendeService:
         return [Kurs(*row) for row in rows]
 
     def delete_from_kurs(self, studierendeId, kursId):
-        return self.db.delete("DELETE FROM teilnahme WHERE kursId = ? AND studierendeId = ?", (str(kursId), str(studierendeId)))
+        return self.db.delete("DELETE FROM teilnahme WHERE kursId = ? AND studierendeId = ?",
+                              (str(kursId), str(studierendeId)))
 
     def add_to_kurs(self, studierendeId, kursId):
-        return self.db.update("INSERT INTO teilnahme (studierendeId, kursId) VALUES(?, ?)", (int(studierendeId), int(kursId)))
+        return self.db.update("INSERT INTO teilname (studierendeId, kursId) VALUES ?, ?", [studierendeId], [kursId])

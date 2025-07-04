@@ -1,5 +1,6 @@
 import tkinter as tk
 
+
 class Button(tk.Button):
     base_style = {
         "font": ('Times New Roman', 14, 'bold'),
@@ -13,6 +14,7 @@ class Button(tk.Button):
         "width": 22,
         "height": 2,
     }
+
     def __init__(self, master, text, command, **kwargs):
         style = self.base_style.copy()
         style.update(kwargs)
@@ -22,6 +24,7 @@ class Button(tk.Button):
             command=command,
             **style
         )
+
 
 class ScrollList(tk.Frame):
     def __init__(self, master, items, height=10, width=40, **kwargs):
@@ -38,6 +41,7 @@ class ScrollList(tk.Frame):
         selection = self.listbox.curselection()
         return self.listbox.get(selection) if selection else None
 
+
 class LabeledEntry(tk.Frame):
     def __init__(self, master, label, initial_value="", **kwargs):
         super().__init__(master, **kwargs)
@@ -53,6 +57,7 @@ class LabeledEntry(tk.Frame):
     def set(self, value):
         self.entry.delete(0, tk.END)
         self.entry.insert(0, value)
+
 
 class LabeledDropdown(tk.Frame):
     def __init__(self, master, label, options, **kwargs):
@@ -71,27 +76,27 @@ class LabeledDropdown(tk.Frame):
     def set(self, value):
         self.var.set(value)
 
+
 class Popup(tk.Toplevel):
-    def __init__(self, master:tk.Tk, title="Hinweis", content=None, on_close=None, **kwargs):
+    def __init__(self, master: tk.Tk, title="Hinweis", content=None, on_close=None, **kwargs):
         super().__init__(master, **kwargs)
 
         self.title(title)
         self.grab_set()
-        self.geometry("1200x800")
         self.resizable(False, False)
+        self.geometry("+%d+%d" % (master.winfo_rootx() + 400, master.winfo_rooty() + 150))
 
-        tk.Label(self, text=title, font=('Times New Roman', 16, 'bold')).pack(padx=30, pady=(20, 10))
+        tk.Label(self, text=title, font=('Times', 16, 'bold')).pack(padx=30, pady=(20, 10))
 
         if content is not None and isinstance(content, tk.Widget):
             self.content = content
         elif content is not None:
-                tk.Label(self, text=str(content), font=('Times New Roman', 13), wraplength=350).pack(padx=30, pady=(0, 15))
+            tk.Label(self, text=str(content), font=('Times New Roman', 13), wraplength=350).pack(padx=30, pady=(0, 15))
 
         self.on_close = on_close
         self.protocol("WM_DELETE_WINDOW", self._close)
 
     def _close(self):
         if self.on_close:
-            
             self.on_close()
         self.destroy()
